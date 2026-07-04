@@ -2,6 +2,8 @@
 
 import '../scss/styles.scss';
 
+// js code
+
 
 const init = function () {
   console.log('Hello world!');

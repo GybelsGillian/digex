@@ -1,1 +1,11 @@
 @use "core" as *;
+
+* {
+    scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
