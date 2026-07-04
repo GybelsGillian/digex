@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		{{ craft.vite.script('src/js/app.js', false) }}
+	</head>
+	<body>
+
+		Hello world!
+
+		{{ 'testHello' | t }}
+
+		{% set homePage = craft.entries.section('pageHome').one() %}
+		{% if homePage %}
+			<h1>{{ homePage.title }}</h1>
+		{% else %}
+			<p>No home page found.</p>
+		{% endif %}
+
+	</body>
+</html>

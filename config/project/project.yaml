@@ -1,0 +1,130 @@
+dateModified: 1783163175
+elementSources:
+  craft\elements\Entry:
+    -
+      heading: Collection
+      key: 'heading:3a440c80-c133-4393-baf5-3a0546460e98'
+      page: Entries
+      type: heading
+    -
+      defaultSort:
+        - postDate
+        - desc
+      defaultViewMode: ''
+      disabled: false
+      key: '*'
+      page: Entries
+      tableAttributes:
+        - status
+        - section
+        - postDate
+        - expiryDate
+        - link
+      type: native
+    -
+      key: singles
+      page: Entries
+      type: native
+    -
+      heading: 'Pages & Singles'
+      key: 'heading:457af573-f414-487b-8516-c710477b6445'
+      page: Entries
+      type: heading
+    -
+      condition:
+        class: craft\elements\conditions\entries\EntryCondition
+        conditionRules:
+          -
+            class: craft\elements\conditions\entries\SectionConditionRule
+            operator: in
+            uid: 65970e17-af94-4c0d-8800-165d1f18f208
+            values:
+              - cdeb6815-9be7-4b4e-9da2-446e508264c7 # Page - Home
+        elementType: craft\elements\Entry
+        fieldContext: global
+      defaultSort:
+        - id
+        - asc
+      defaultViewMode: ''
+      key: 'custom:fbe35ea5-e10a-442f-a570-a6bbc20843ae'
+      label: Pages
+      page: Entries
+      tableAttributes: '-'
+      type: custom
+    -
+      condition:
+        class: craft\elements\conditions\entries\EntryCondition
+        conditionRules:
+          -
+            class: craft\elements\conditions\entries\SectionConditionRule
+            operator: in
+            uid: b12acfe4-320e-4e6a-8b97-2428ce9a42b3
+        elementType: craft\elements\Entry
+        fieldContext: global
+      defaultSort:
+        - id
+        - asc
+      defaultViewMode: ''
+      key: 'custom:ff186227-9f25-47a6-9ad0-cf0b421ef809'
+      label: Modals
+      page: Entries
+      tableAttributes: '-'
+      type: custom
+    -
+      condition:
+        class: craft\elements\conditions\entries\EntryCondition
+        conditionRules:
+          -
+            class: craft\elements\conditions\entries\SectionConditionRule
+            operator: in
+            uid: 48e76d8b-8671-4a42-9548-2be7723167f8
+        elementType: craft\elements\Entry
+        fieldContext: global
+      defaultSort:
+        - id
+        - asc
+      defaultViewMode: ''
+      key: 'custom:5e5cde71-af2b-4734-ad24-afcb9474eb6c'
+      label: Elements
+      page: Entries
+      tableAttributes: '-'
+      type: custom
+email:
+  fromEmail: voorbeeld@howest.be
+  fromName: naam
+  transportType: craft\mail\transportadapters\Sendmail
+meta:
+  __names__:
+    1c2b3334-526b-45d2-9e4c-ace04ac24aaa: 'Digex - Digital agency' # Digex - Digital agency
+    2b8354e8-8c54-4a9f-81ff-a0a06ff67183: 'Page - Home' # Page - Home
+    114014bf-aa49-4aca-9bcc-fc2832eebcad: EN # EN
+    c212cccf-c1d5-441a-8741-410d70565cb6: FR # FR
+    cdeb6815-9be7-4b4e-9da2-446e508264c7: 'Page - Home' # Page - Home
+    df7f6e15-03b1-45da-92f8-7c10f8de5112: NL # NL
+    dfd7d3ad-44a5-490c-b5e7-ea4bbd0f2acd: 'Public Schema' # Public Schema
+plugins:
+  ckeditor:
+    edition: standard
+    enabled: true
+    schemaVersion: 5.6.0.0
+  datastar:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+  vite:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+system:
+  edition: solo
+  live: true
+  name: 'Craft Template met vite'
+  schemaVersion: 5.10.0.0
+  timeZone: America/Los_Angeles
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  require2fa: false
+  requireEmailVerification: true

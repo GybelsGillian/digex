@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --emptyOutDir "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "sass": "^1.93.2",
+    "vite": "^7.1.9",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-manifest-sri": "^0.2.0",
+    "vite-plugin-restart": "^1.0.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8"
+  },
+  "type": "module",
+  "optionalDependencies": {
+    "@rollup/rollup-linux-arm64-gnu": "*",
+    "@rollup/rollup-linux-x64-gnu": "*"
+  }
+}
