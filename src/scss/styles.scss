@@ -3,4 +3,36 @@
 // @import 'bootstrap/scss/bootstrap';
 
 // *** Import your custom SCSS **
-@import 'components';
+
+@use 'settings';
+@use 'generic';
+@use 'elements';
+@use 'objects';
+
+// ********** COMPONENTS *********** COMPONENTS **********
+
+// Components — Buttons
+
+// Components — Inputs
+
+// Components — Miscellaneous
+
+// Components — Badges
+
+// Components — Paginations
+
+// Components — Carousels
+
+// Components — Modals
+
+// Components — Forms
+
+// Components — General
+
+@use '_general/component-navbar';
+@use '_general/component-footer';
+
+// ********** ENDCOMPONENTS *********** ENDCOMPONENTS **********
+
+
+@use 'utilities';
