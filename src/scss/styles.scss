@@ -1,38 +1,15 @@
-// *** If you want to use Bootstrap's SCSS, uncomment the following lines ***
+// Small, cacheable global foundation.
+@use 'config';
 
-// @import 'bootstrap/scss/bootstrap';
-
-// *** Import your custom SCSS **
-
-@use 'settings';
+@use 'base/root';
+@use 'base/reset';
 @use 'generic';
 @use 'elements';
 @use 'objects';
 
-// ********** COMPONENTS *********** COMPONENTS **********
+// Only components rendered by the shared layout on virtually every page.
+@use 'components/general/navbar';
+@use 'components/general/footer';
 
-// Components — Buttons
-
-// Components — Inputs
-
-// Components — Miscellaneous
-
-// Components — Badges
-
-// Components — Paginations
-
-// Components — Carousels
-
-// Components — Modals
-
-// Components — Forms
-
-// Components — General
-
-@use '_general/component-navbar';
-@use '_general/component-footer';
-
-// ********** ENDCOMPONENTS *********** ENDCOMPONENTS **********
-
-
-@use 'utilities';
+// Utilities are intentionally loaded through entries/utilities.scss after the
+// optional page stylesheet, so they remain the final cascade layer.

@@ -1,110 +1,24 @@
-@use 'core' as *;
-
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+@use 'config' as *;
 
 body {
-  position: relative;
-  margin: 0;
-  background-color: red;
+    position: relative;
+}
+
+h1 {
+    @include fs-h1-md;
 }
 
 a {
-  text-decoration: none;
-  color: inherit;
+    color: inherit;
+    text-decoration: none;
 }
 
-button {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-
-  &:focus {
-    outline: unset;
-  }
-}
-
-fieldset {
-  min-width: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
-}
-
-legend,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-  padding: 0;
-}
-
-p {
-  margin: 0;
-}
-
-ol,
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  margin: 0;
-}
-
-input[type="search"],
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="number"],
+input[type='search'],
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='tel'],
+input[type='number'],
 textarea {
-  border: none;
-  width: 100%;
-
-  &:-webkit-autofill {}
-
-  &:focus {
-    outline: none;
-  }
-}
-
-input[type="file"] {
-  &::-webkit-file-upload-button {
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-  }
-
-  &::file-selector-button {
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-  }
-
-  &:focus {
-    outline: none;
-  }
-}
-
-pre {
-  background-color: white !important;
-  color: initial !important;
-  min-height: fit-content !important;
+    width: 100%;
 }

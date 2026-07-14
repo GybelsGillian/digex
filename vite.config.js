@@ -15,6 +15,7 @@ export default ({ command, mode }) => {
         input: {
           app: 'src/js/app.js',
           home: 'src/js/pages/home.js',
+          utilities: 'src/js/utilities.js',
         },
       },
     },

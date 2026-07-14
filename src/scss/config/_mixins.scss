@@ -1,0 +1,8 @@
+@use 'breakpoints' as *;
+@use 'settings' as *;
+
+@mixin fs-h1-md {
+    font-size: 6rem;
+    line-height: 3.5rem;
+    font-family: $font-family-heading;
+}

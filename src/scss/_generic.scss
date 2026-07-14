@@ -1,11 +1,105 @@
-@use "core" as *;
+@use 'sass:math';
+@use 'config' as *;
 
-* {
-    scroll-behavior: smooth;
+.container,
+.container-fluid {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--grid-gutter-width);
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+.container {
+    @each $breakpoint, $max-width in $container-max-widths {
+        @include media-breakpoint-up($breakpoint) {
+            max-width: $max-width;
+        }
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-inline: math.div($grid-gutter-width, -2);
+}
+
+.row>* {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: math.div($grid-gutter-width, 2);
+}
+
+.col {
+    flex: 1 0 0%;
+}
+
+@for $i from 1 through $grid-columns {
+    .col-#{$i} {
+        flex: 0 0 auto;
+        width: math.percentage(math.div($i, $grid-columns));
+    }
+}
+
+@for $i from 0 through ($grid-columns - 1) {
+    .offset-#{$i} {
+        margin-left: math.percentage(math.div($i, $grid-columns));
+    }
+}
+
+@for $i from 0 through $order-columns {
+    .order-#{$i} {
+        order: $i !important;
+    }
+}
+
+@each $breakpoint, $value in $breakpoints {
+    @include media-breakpoint-up($breakpoint) {
+        .col-#{$breakpoint} {
+            flex: 1 0 0%;
+        }
+
+        @for $i from 1 through $grid-columns {
+            .col-#{$breakpoint}-#{$i} {
+                flex: 0 0 auto;
+                width: math.percentage(math.div($i, $grid-columns));
+            }
+        }
+
+        @for $i from 0 through ($grid-columns - 1) {
+            .offset-#{$breakpoint}-#{$i} {
+                margin-left: math.percentage(math.div($i, $grid-columns));
+            }
+        }
+
+        @for $i from 0 through $order-columns {
+            .order-#{$breakpoint}-#{$i} {
+                order: $i !important;
+            }
+        }
+    }
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.d-none {
+    display: none;
+}
+
+.d-flex {
+    display: flex;
+}
+
+@each $breakpoint, $value in $breakpoints {
+    @if $value !=0 {
+        @include media-breakpoint-up($breakpoint) {
+            .d-#{$breakpoint}-none {
+                display: none;
+            }
+
+            .d-#{$breakpoint}-flex {
+                display: flex;
+            }
+        }
+    }
 }
