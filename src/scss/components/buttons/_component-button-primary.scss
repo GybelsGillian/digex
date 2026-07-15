@@ -9,9 +9,5 @@
         @include fs-body-md;
         padding: .5rem 1rem;
         border-radius: map.get($border-radius, pill);
-
-        @include media-breakpoint-down(lg) {
-            border-radius: unset;
-        }
     }
 }

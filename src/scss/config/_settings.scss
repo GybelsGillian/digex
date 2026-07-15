@@ -1,3 +1,5 @@
+@use 'breakpoints' as *;
+
 :root {
     --grid-gutter-width: 1.5rem;
     --container-width: 95rem;
@@ -45,6 +47,10 @@
     --border-radius-sm: .5rem;
     --border-radius-xs: .375rem;
     --border-radius-xxs: .25rem;
+
+    @include media-breakpoint-up(xl) {
+        --grid-gutter-width: 2.5rem;
+    }
 }
 
 // Grid system
@@ -60,8 +66,8 @@ $container-max-widths: (
     lg: 100%,
     xl: 100%,
     xxl: 100%,
-    xxxl: 1520px,
-    xxxxl: 1720px
+    xxxl: 100%,
+    xxxxl: 100% // xxxl: 1520px, xxxxl: 1720px
 );
 
 // Typography
