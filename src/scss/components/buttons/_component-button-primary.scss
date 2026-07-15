@@ -1,11 +1,17 @@
+@use 'sass:map';
 @use '../../config' as *;
 
 .c-btn-primary {
     background-color: $color-primary;
+    color: $color-neutral-white;
 
     &--md {
-        @include fs-body-lg;
-        padding: .375rem 1rem;
-        border-radius: $border-radius-rounded;
+        @include fs-body-md;
+        padding: .5rem 1rem;
+        border-radius: map.get($border-radius, pill);
+
+        @include media-breakpoint-down(lg) {
+            border-radius: unset;
+        }
     }
 }

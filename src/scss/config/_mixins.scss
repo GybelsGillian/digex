@@ -10,13 +10,13 @@
 @mixin fs-h1-md {
     font-size: 4rem;
     line-height: 4.5rem;
-    font-family: $font-family-heading;
+    font-family: $font-family-body;
 }
 
-@mixin fs-h1-sm {
-    font-size: 3.5rem;
+@mixin fs-h1-sm($ff: $font-family-heading) {
+    font-size: 3rem;
     line-height: 4rem;
-    font-family: $font-family-heading;
+    font-family: $ff;
 }
 
 @mixin fs-h2-lg {

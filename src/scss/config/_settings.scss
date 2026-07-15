@@ -5,6 +5,9 @@
 
     --color-primary: #B337B4;
     --color-neutral-white: #FFFFFF;
+    --color-neutral-softwhite: #F8F9FA;
+    --color-neutral-brokenwhite: #F0F4F5;
+    --color-neutral-navyblack: #17172B;
     --color-neutral-black: #000000;
 
     --section-padding-xl: 3rem;
@@ -21,15 +24,15 @@
     --section-gap-xs: .5rem;
     --section-gap-xxs: .25rem;
 
-    --card-padding-lg: 1.5rem;
-    --card-padding-md: 1rem;
-    --card-padding-sm: .75rem;
-    --card-padding-xs: .5rem;
+    --component-padding-lg: 1.5rem;
+    --component-padding-md: 1rem;
+    --component-padding-sm: .75rem;
+    --component-padding-xs: .5rem;
 
-    --card-gap-lg: 1.5rem;
-    --card-gap-md: 1rem;
-    --card-gap-sm: .75rem;
-    --card-gap-xs: .5rem;
+    --component-gap-lg: 1.5rem;
+    --component-gap-md: 1rem;
+    --component-gap-sm: .75rem;
+    --component-gap-xs: .5rem;
 
     --navbar-height: 5.5rem;
 
@@ -63,8 +66,12 @@ $container-max-widths: (
 
 // Typography
 
-$font-family-heading: 'Nunito', sans-serif;
-$font-family-body: 'Nunito', sans-serif;
+$font-family-notable: 'Notable', sans-serif;
+$font-family-playfair: 'Playfair Display', serif;
+$font-family-aguafina: 'Aguafina Script', cursive;
+$font-family-heading: 'Notable', sans-serif;
+$font-family-body: 'Schibsted Grotesk', sans-serif;
+
 $fw-light: 300;
 $fw-regular: 400;
 $fw-medium: 500;
@@ -77,47 +84,62 @@ $fw-black: 900;
 
 $color-primary: var(--color-primary);
 $color-neutral-white: var(--color-neutral-white);
+$color-neutral-softwhite: var(--color-neutral-softwhite);
+$color-neutral-brokenwhite: var(--color-neutral-brokenwhite);
+$color-neutral-navyblack: var(--color-neutral-navyblack);
 $color-neutral-black: var(--color-neutral-black);
 
 // Spacing styles
 
-$section-padding-xl: var(--section-padding-xl);
-$section-padding-lg: var(--section-padding-lg);
-$section-padding-md: var(--section-padding-md);
-$section-padding-sm: var(--section-padding-sm);
-$section-padding-xs: var(--section-padding-xs);
+$section-paddings: (
+    xs: var(--section-padding-xs),
+    sm: var(--section-padding-sm),
+    md: var(--section-padding-md),
+    lg: var(--section-padding-lg),
+    xl: var(--section-padding-xl)
+);
 
-$section-gap-xxl: var(--section-gap-xxl);
-$section-gap-xl: var(--section-gap-xl);
-$section-gap-lg: var(--section-gap-lg);
-$section-gap-md: var(--section-gap-md);
-$section-gap-sm: var(--section-gap-sm);
-$section-gap-xs: var(--section-gap-xs);
-$section-gap-xxs: var(--section-gap-xxs);
+$section-gaps: (
+    xxs: var(--section-gap-xxs),
+    xs: var(--section-gap-xs),
+    sm: var(--section-gap-sm),
+    md: var(--section-gap-md),
+    lg: var(--section-gap-lg),
+    xl: var(--section-gap-xl),
+    xxl: var(--section-gap-xxl)
+);
 
-$card-padding-lg: var(--card-padding-lg);
-$card-padding-md: var(--card-padding-md);
-$card-padding-sm: var(--card-padding-sm);
-$card-padding-xs: var(--card-padding-xs);
+$component-paddings: (
+    xs: var(--component-padding-xs),
+    sm: var(--component-padding-sm),
+    md: var(--component-padding-md),
+    lg: var(--component-padding-lg)
+);
 
-$card-gap-lg: var(--card-gap-lg);
-$card-gap-md: var(--card-gap-md);
-$card-gap-sm: var(--card-gap-sm);
-$card-gap-xs: var(--card-gap-xs);
+$component-gaps: (
+    xs: var(--component-gap-xs),
+    sm: var(--component-gap-sm),
+    md: var(--component-gap-md),
+    lg: var(--component-gap-lg)
+);
 
 $navbar-height: var(--navbar-height);
 
 // Layer styles
 
-$border-radius-rounded: var(--border-radius-rounded);
-$border-radius-xxxl: var(--border-radius-xxxl);
-$border-radius-xxl: var(--border-radius-xxl);
-$border-radius-xl: var(--border-radius-xl);
-$border-radius-lg: var(--border-radius-lg);
-$border-radius-md: var(--border-radius-md);
-$border-radius-sm: var(--border-radius-sm);
-$border-radius-xs: var(--border-radius-xs);
-$border-radius-xxs: var(--border-radius-xxs);
+$border-radius: (
+    xxs: var(--border-radius-xxs),
+    xs: var(--border-radius-xs),
+    sm: var(--border-radius-sm),
+    md: var(--border-radius-md),
+    lg: var(--border-radius-lg),
+    xl: var(--border-radius-xl),
+    xxl: var(--border-radius-xxl),
+    xxxl: var(--border-radius-xxxl),
+    pill: var(--border-radius-rounded)
+);
+
+$stroke-smooth: 1px solid color-mix(in srgb, $color-neutral-navyblack 20%, transparent);
 
 $box-shadow-lg: 0 8px 24px rgb(0 0 0 / 25%);
 $box-shadow-md: 0 4px 12px rgb(0 0 0 / 10%);

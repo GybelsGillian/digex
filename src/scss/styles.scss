@@ -8,6 +8,7 @@
 
 // Only components rendered by the shared layout on virtually every page.
 @use 'components/buttons/component-button-primary';
+@use 'components/buttons/component-button-secondary';
 
 @use 'components/general/navbar';
 @use 'components/general/footer';

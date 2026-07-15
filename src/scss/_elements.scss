@@ -3,18 +3,9 @@
 body {
     position: relative;
     font-family: $font-family-body;
-}
-
-h1 {
-    @include fs-h1-md;
-}
-
-h2 {
-    @include fs-h2-md;
-}
-
-h3 {
-    @include fs-h3-md;
+    background-color: $color-neutral-brokenwhite;
+    background-image: url(/assets/textures/bg-fractal-noise.webp);
+    color: $color-neutral-navyblack;
 }
 
 a {

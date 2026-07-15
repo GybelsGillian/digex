@@ -1,3 +1,34 @@
+@use 'sass:map';
 @use '../config' as *;
 
 // Components used by the homepage only. e.g. @use '../components/buttons/button';
+
+.s-hero-home {
+
+    &__inner {
+        padding-top: calc(map.get($section-paddings, md) + $navbar-height);
+        padding-bottom: map.get($section-paddings, md);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__heading-container {
+        display: flex;
+        flex-direction: column;
+        gap: map.get($section-gaps, lg);
+    }
+
+    &__stats {
+        margin-top: auto;
+
+        article {
+            padding-bottom: map.get($component-paddings, md);
+            border-bottom: $stroke-smooth;
+
+            h2 {
+                @include fs-h1-sm($ff: $font-family-body);
+            }
+        }
+    }
+}

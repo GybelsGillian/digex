@@ -1,14 +1,13 @@
 @use '../../config' as *;
 
 .c-navbar {
+    position: fixed;
+    width: 100%;
 
     &__logo {
         margin-right: auto;
 
-        svg {
-            fill: black;
-            mix-blend-mode: difference;
-        }
+        svg {}
     }
 
     &__inner {
@@ -23,9 +22,21 @@
         gap: 1.5rem;
     }
 
+    &__navlink {
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
     &__actions {
         display: flex;
         align-items: center;
         gap: 1rem;
+
+        mix-blend-mode: normal;
     }
 }

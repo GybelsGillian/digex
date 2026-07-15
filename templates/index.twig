@@ -3,7 +3,10 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
+		<title>DIGEX - We create digital experiences</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&family=Notable&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 		{{ craft.vite.script('src/js/app.js', false) }}
 		{{ craft.vite.script('src/js/pages/home.js', false) }}
 		{{ craft.vite.script('src/js/utilities.js', false) }}
@@ -11,37 +14,31 @@
 	<body>
 		{% include '_shared/_general/_navbar.twig' %}
 
-		<div class="container">
-			{{ 'testHello' | t }}
+		<header class="s-hero-home">
 			{% set homePage = craft.entries.section('pageHome').one() %}
-			<h1 class="fs-h1-lg">{{ homePage.title }}
-				- H1 lg</h1>
-			<h1 class="fs-h1-md">{{ homePage.title }}
-				- H1 md</h1>
-			<h1 class="fs-h1-sm">{{ homePage.title }}
-				- H1 sm</h1>
-			<h2 class="fs-h2-lg">{{ homePage.title }}
-				- H2 lg</h2>
-			<h2 class="fs-h2-md">{{ homePage.title }}
-				- H2 md</h2>
-			<h2 class="fs-h2-sm">{{ homePage.title }}
-				- H2 sm</h2>
-			<h3 class="fs-h3-lg">{{ homePage.title }}
-				- H3 lg</h3>
-			<h3 class="fs-h3-md">{{ homePage.title }}
-				- H3 md</h3>
-			<h3 class="fs-h3-sm">{{ homePage.title }}
-				- H3 sm</h3>
-			<p class="fs-body-xl">{{ homePage.title }}
-				- Body xl</p>
-			<p class="fs-body-lg">{{ homePage.title }}
-				- Body lg</p>
-			<p class="fs-body-md">{{ homePage.title }}
-				- Body md</p>
-			<p class="fs-body-sm">{{ homePage.title }}
-				- Body sm</p>
-			<p class="fs-body-xs">{{ homePage.title }}
-				- Body xs</p>
-		</div>
+
+			<div class="container">
+				<div class="s-hero-home__inner">
+					<div class="s-hero-home__heading-container">
+						<h1 class="fs-h1-lg">{{ homePage.title }}</h1>
+						<a class="c-btn-secondary c-btn-secondary--md" href="#">Request your price</a>
+					</div>
+					<div class="s-hero-home__stats">
+						<article>
+							<h2>128+</h2>
+							<p>128+ projects completed</p>
+						</article>
+						<article>
+							<h2>50+</h2>
+							<p>50+ satisfied clients</p>
+						</article>
+						<article>
+							<h2>10+</h2>
+							<p>10+ years of experience</p>
+						</article>
+					</div>
+				</div>
+			</div>
+		</header>
 	</body>
 </html>

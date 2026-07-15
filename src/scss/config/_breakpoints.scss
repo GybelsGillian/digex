@@ -13,7 +13,7 @@ $breakpoints: (
 );
 
 @function breakpoint($name) {
-    $result: map.get($breakpoints, $name );
+    $result: map.get($breakpoints, $name);
 
     @if $result ==null {
         @error 'Unknown breakpoint `#{$name}`. Available: #{map.keys($breakpoints)}.';
@@ -23,9 +23,27 @@ $breakpoints: (
 }
 
 @mixin media-breakpoint-up($name) {
-    @content;
+    $min: breakpoint($name);
+
+    @if $min ==0 {
+        @content;
+    }
+
+    @else {
+        @media (min-width: $min) {
+            @content;
+        }
+    }
 }
 
 @mixin media-breakpoint-down($name) {
-    @content;
+    $max: breakpoint($name);
+
+    @if $max ==0 {
+        @error 'media-breakpoint-down() cannot use the zero breakpoint `#{$name}`.';
+    }
+
+    @media (max-width: calc($max - .02px)) {
+        @content;
+    }
 }

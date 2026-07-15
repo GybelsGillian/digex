@@ -32,6 +32,36 @@
     padding-inline: math.div($grid-gutter-width, 2);
 }
 
+@each $size, $value in $section-paddings {
+    .p-s-#{$size} {
+        padding-block: $value;
+    }
+}
+
+@each $size, $value in $section-gaps {
+    .g-s-#{$size} {
+        gap: $value;
+    }
+}
+
+@each $size, $value in $component-paddings {
+    .p-c-#{$size} {
+        padding: $value;
+    }
+}
+
+@each $size, $value in $component-gaps {
+    .g-c-#{$size} {
+        gap: $value;
+    }
+}
+
+@each $size, $value in $border-radius {
+    .rounded-#{$size} {
+        border-radius: $value;
+    }
+}
+
 .col {
     flex: 1 0 0%;
 }
