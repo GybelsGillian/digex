@@ -2,10 +2,19 @@
 
 body {
     position: relative;
+    font-family: $font-family-body;
 }
 
 h1 {
     @include fs-h1-md;
+}
+
+h2 {
+    @include fs-h2-md;
+}
+
+h3 {
+    @include fs-h3-md;
 }
 
 a {

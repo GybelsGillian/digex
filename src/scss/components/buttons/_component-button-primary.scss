@@ -1,0 +1,11 @@
+@use '../../config' as *;
+
+.c-btn-primary {
+    background-color: $color-primary;
+
+    &--md {
+        @include fs-body-lg;
+        padding: .375rem 1rem;
+        border-radius: $border-radius-rounded;
+    }
+}

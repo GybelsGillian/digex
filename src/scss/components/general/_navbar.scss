@@ -1,41 +1,31 @@
 @use '../../config' as *;
 
 .c-navbar {
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-background);
+
+    &__logo {
+        margin-right: auto;
+
+        svg {
+            fill: black;
+            mix-blend-mode: difference;
+        }
+    }
 
     &__inner {
         display: flex;
         align-items: center;
-        min-height: var(--navbar-height);
         gap: 1.5rem;
     }
 
-    &__brand {
-        flex-shrink: 0;
+    &__navlist {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
     }
 
     &__actions {
         display: flex;
         align-items: center;
         gap: 1rem;
-    }
-
-    &__nav-list {
-        display: none;
-        align-items: center;
-        gap: 1rem;
-        margin-left: auto;
-    }
-
-    &__link:hover,
-    &__link[aria-current='page'] {
-        color: var(--color-primary);
-    }
-
-    @include media-breakpoint-up(lg) {
-        &__nav-list {
-            display: flex;
-        }
     }
 }

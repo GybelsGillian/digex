@@ -1,6 +1,1 @@
-.c-footer {
-    margin-top: auto;
-    padding-block: 2rem;
-    color: var(--color-muted);
-    background: var(--color-background-soft);
-}
+@use '../../config' as *;

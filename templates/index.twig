@@ -11,14 +11,37 @@
 	<body>
 		{% include '_shared/_general/_navbar.twig' %}
 
-		{{ 'testHello' | t }}
-
-		{% set homePage = craft.entries.section('pageHome').one() %}
-		{% if homePage %}
-			<h1>{{ homePage.title }}</h1>
-		{% else %}
-			<p>No home page found.</p>
-		{% endif %}
-
+		<div class="container">
+			{{ 'testHello' | t }}
+			{% set homePage = craft.entries.section('pageHome').one() %}
+			<h1 class="fs-h1-lg">{{ homePage.title }}
+				- H1 lg</h1>
+			<h1 class="fs-h1-md">{{ homePage.title }}
+				- H1 md</h1>
+			<h1 class="fs-h1-sm">{{ homePage.title }}
+				- H1 sm</h1>
+			<h2 class="fs-h2-lg">{{ homePage.title }}
+				- H2 lg</h2>
+			<h2 class="fs-h2-md">{{ homePage.title }}
+				- H2 md</h2>
+			<h2 class="fs-h2-sm">{{ homePage.title }}
+				- H2 sm</h2>
+			<h3 class="fs-h3-lg">{{ homePage.title }}
+				- H3 lg</h3>
+			<h3 class="fs-h3-md">{{ homePage.title }}
+				- H3 md</h3>
+			<h3 class="fs-h3-sm">{{ homePage.title }}
+				- H3 sm</h3>
+			<p class="fs-body-xl">{{ homePage.title }}
+				- Body xl</p>
+			<p class="fs-body-lg">{{ homePage.title }}
+				- Body lg</p>
+			<p class="fs-body-md">{{ homePage.title }}
+				- Body md</p>
+			<p class="fs-body-sm">{{ homePage.title }}
+				- Body sm</p>
+			<p class="fs-body-xs">{{ homePage.title }}
+				- Body xs</p>
+		</div>
 	</body>
 </html>

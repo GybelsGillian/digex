@@ -1,13 +1,14 @@
 // Small, cacheable global foundation.
 @use 'config';
 
-@use 'base/root';
 @use 'base/reset';
 @use 'generic';
 @use 'elements';
 @use 'objects';
 
 // Only components rendered by the shared layout on virtually every page.
+@use 'components/buttons/component-button-primary';
+
 @use 'components/general/navbar';
 @use 'components/general/footer';
 
