@@ -1,64 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>DIGEX - We create digital experiences</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&family=Notable&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-		{{ craft.vite.script('src/js/app.js', false) }}
-		{{ craft.vite.script('src/js/pages/home.js', false) }}
-		{{ craft.vite.script('src/js/utilities.js', false) }}
-	</head>
-	<body>
-		{% include '_shared/_general/_navbar.twig' %}
+{% extends '_shared/_layouts/_layout-main.twig' %}
 
-		<header class="s-hero-home">
-			{% set homePage = craft.entries.section('pageHome').one() %}
+{% set title = 'DIGEX - We create digital experiences' %}
 
-			<div class="container">
-				<div class="s-hero-home__inner">
-					<div class="s-hero-home__heading-container">
-						<h1 class="s-hero-home__heading fs-h1-md">
-							<span data-text="bold">We</span>
-							<span data-text="serif">create</span>
-							<br>
-							<span data-text="serif">your</span>
-							<span data-text="bold">digital</span>
-							<span data-text="cursive">experience</span>
-						</h1>
-						<a class="c-btn-secondary c-btn-secondary--md" href="#">Request your price</a>
-					</div>
-					<div class="s-hero-home__stats">
-						<article>
-							<h2>128+</h2>
-							<p>128+ projects completed</p>
-						</article>
-						<article>
-							<h2>50+</h2>
-							<p>50+ satisfied clients</p>
-						</article>
-						<article>
-							<h2>10+</h2>
-							<p>10+ years of experience</p>
-						</article>
-					</div>
+{% block scripts %}
+	{{ craft.vite.script('src/js/pages/home.js', false) }}
+{% endblock %}
 
-					<img class="s-hero-home__beetle" src="/assets/illustrations/beetle.webp" alt="Illustration of a beetle">
+{% block content %}
+	<header class="s-hero-home">
+		{% set homePage = craft.entries.section('pageHome').one() %}
+
+		<div class="container">
+			<div class="s-hero-home__inner">
+				<div class="s-hero-home__heading-container">
+					<h1 class="s-hero-home__heading fs-h1-md">
+						<span data-text="bold">We</span>
+						<span data-text="serif">create</span>
+						<br>
+						<span data-text="serif">your</span>
+						<span data-text="bold">digital</span>
+						<span data-text="cursive">experience</span>
+					</h1>
+					<a class="c-btn-secondary c-btn-secondary--md" href="#">Request your price</a>
+				</div>
+				<div class="s-hero-home__stats">
+					<article>
+						<h2>128+</h2>
+						<p>128+ projects completed</p>
+					</article>
+					<article>
+						<h2>50+</h2>
+						<p>50+ satisfied clients</p>
+					</article>
+					<article>
+						<h2>10+</h2>
+						<p>10+ years of experience</p>
+					</article>
+				</div>
+
+				<img class="s-hero-home__beetle" src="/assets/illustrations/beetle.webp" alt="Illustration of a beetle">
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="s-flowers js-section-flowers">
+			<div class="s-flowers__wrap">
+				<video class="s-flowers__video js-section-flowers-video" src="/assets/test-scroll-3.webm" preload="auto" muted playsinline disablepictureinpicture></video>
+
+				<div class="o-curtain js-curtain">
+					<div class="o-curtain__panel js-curtain-panel" data-panel="5"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="4"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="3"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="2"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="1"></div>
 				</div>
 			</div>
-		</header>
+		</section>
 
-		<section class="s-flowers" id="sequenceSection">
-			<div class="s-flowers__wrap">
-				<canvas class="s-flowers__canvas" id="sequenceCanvas"></canvas>
+		<section class="s-cta-projects js-section-cta-projects">
+			<div class="s-cta-projects__wrap" style="--projects: 3">
+				<div class="s-cta-projects__slide">
+					<article class="c-card-project-lg">
+						<picture class="c-card-project-lg__image">
+							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
+							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
+						</picture>
+						<div class="c-card-project-lg__text-container">
+							<header class="c-card-project-lg__header">
+								<h3 class="c-card-project-lg__title">Audyn</h3>
+								<p class="c-card-project-lg__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi facilis atque maxime!</p>
+							</header>
+							<a href="#" class="c-card-project-lg__link">Explore project</a>
+						</div>
+					</article>
+					<article class="c-card-project-lg">
+						<picture class="c-card-project-lg__image">
+							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
+							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
+						</picture>
+						<div class="c-card-project-lg__text-container">
+							<header class="c-card-project-lg__header">
+								<h3 class="c-card-project-lg__title">Audyn</h3>
+								<p class="c-card-project-lg__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi facilis atque maxime!</p>
+							</header>
+							<a href="#" class="c-card-project-lg__link">Explore project</a>
+						</div>
+					</article>
+					<article class="c-card-project-lg">
+						<picture class="c-card-project-lg__image">
+							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
+							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
+						</picture>
+						<div class="c-card-project-lg__text-container">
+							<header class="c-card-project-lg__header">
+								<h3 class="c-card-project-lg__title">Audyn</h3>
+								<p class="c-card-project-lg__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi facilis atque maxime!</p>
+							</header>
+							<a href="#" class="c-card-project-lg__link">Explore project</a>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="s-development">
+			<div class="s-development__wrap">
+				<video class="s-development__video" src="/assets/textures/dark-moody-clouds.mov" autoplay muted loop></video>
 			</div>
 		</section>
 
 		<section style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-			<h2 style="font-size: 3rem;">Scroll down to see the animation</h2>
+			<h2>GAY</h2>
 		</section>
-
-	</body>
-</html>
+	</main>
+{% endblock %}

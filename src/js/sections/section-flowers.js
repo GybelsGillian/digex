@@ -1,361 +1,366 @@
-			const section = document.getElementById("sequenceSection");
-const canvas = document.getElementById("sequenceCanvas");
+// #region ***  DOM references                           ***********
 
-const ctx = canvas.getContext("2d", {
-alpha: true,
-desynchronized: true
-});
+let section;
+let video;
+let curtainPanels = [];
 
-const frameStart = 1000;
-const frameEnd = 1320;
-const frameCount = frameEnd - frameStart + 1;
+// #endregion
 
-const folder = "/assets/sequence-webp-hq";
-const fileBase = "three-realistic-flowers-growing-with-alpha-channel-2026-02-18-08-05-49-utc_";
+// #region ***  Configuration                            ***********
 
-const imageCache = new Map();
-const loadingImages = new Set();
+const VIDEO_FRAME_RATE = 60;
 
-let currentFrame = 0;
-let targetFrame = 0;
-let lastDrawnIndex = -1;
-let animationStarted = false;
+const MINIMUM_SEEK_DIFFERENCE =
+  0.5 / VIDEO_FRAME_RATE;
 
-let previousTargetFrameForVelocity = 0;
-let previousVelocityTime = performance.now();
+const VIDEO_START_PROGRESS = 0;
+const VIDEO_END_PROGRESS = 1;
 
-let scrollVelocity = 0;
-let instantScrollVelocity = 0;
+const CURTAIN_START_PROGRESS =
+  .7;
 
-/*
-          Meer cache = minder opnieuw laden.
-          Lager = minder RAM.
-          90-130 is meestal oké voor jouw case.
-        */
-const maxCachedImages = 110;
+const CURTAIN_END_PROGRESS = 1;
 
-function clamp(value, min, max) {
-return Math.min(Math.max(value, min), max);
-}
+const CURTAIN_PANEL_DURATION = 0.5;
+const CURTAIN_PANEL_STAGGER = 0.125;
 
-function getFrameNumber(index) {
-return frameStart + index;
-}
+// #endregion
 
-function getFramePath(index) {
-const frameNumber = getFrameNumber(index);
-return `${folder}/${fileBase}${frameNumber}.webp`;
-}
+// #region ***  State                                    ***********
 
-function resizeCanvas() {
-const dpr = Math.min(window.devicePixelRatio || 1, 2);
-const { width, height } = canvas.getBoundingClientRect();
+let isVideoReady = false;
+let targetVideoTime = 0;
+let animationFrameId = null;
+let shouldSeekAgain = false;
 
-canvas.width = Math.floor(width * dpr);
-canvas.height = Math.floor(height * dpr);
+// #endregion
 
-// canvas.style.width = window.innerWidth + "px";
-// canvas.style.height = window.innerHeight + "px";
+// #region ***  Callback-Visualisation - show___         ***********
 
-ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+const showVideoFrame = (
+  scrollProgress
+) => {
+  if (!isVideoReady) {
+    return;
+  }
 
-drawFrame(Math.round(currentFrame));
-}
+  const videoProgress =
+    getProgressBetween(
+      scrollProgress,
+      VIDEO_START_PROGRESS,
+      VIDEO_END_PROGRESS
+    );
 
-function drawImageAtFullHeight(img) {
-const { width: canvasWidth, height: canvasHeight } = canvas.getBoundingClientRect();
-const drawHeight = canvasHeight;
-const drawWidth = drawHeight * (img.naturalWidth / img.naturalHeight);
-const x = (canvasWidth - drawWidth) / 2;
+  targetVideoTime =
+    videoProgress * getMaximumVideoTime();
 
-ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-ctx.drawImage(img, x, 0, drawWidth, drawHeight);
-}
+  if (video.seeking) {
+    shouldSeekAgain = true;
+    return;
+  }
 
-function findClosestLoadedIndex(index) {
-const safeIndex = clamp(index, 0, frameCount - 1);
+  const timeDifference = Math.abs(
+    targetVideoTime - video.currentTime
+  );
 
-if (imageCache.has(safeIndex)) {
-return safeIndex;
-}
+  if (
+    timeDifference <
+    MINIMUM_SEEK_DIFFERENCE
+  ) {
+    shouldSeekAgain = false;
+    return;
+  }
 
-for (let offset = 1; offset <= 45; offset++) {
-const before = safeIndex - offset;
-const after = safeIndex + offset;
-
-if (imageCache.has(before)) 
-return before;
-
-
-
-if (imageCache.has(after)) 
-return after;
-
-
-
-}
-
-if (lastDrawnIndex !== -1 && imageCache.has(lastDrawnIndex)) {
-return lastDrawnIndex;
-}
-
-return null;
-}
-
-function drawFrame(index) {
-const safeIndex = clamp(index, 0, frameCount - 1);
-const drawableIndex = findClosestLoadedIndex(safeIndex);
-
-if (drawableIndex === null) 
-return;
-
-
-
-const img = imageCache.get(drawableIndex);
-
-if (! img || ! img.complete || img.naturalWidth === 0) 
-return;
-
-
-
-drawImageAtFullHeight(img);
-lastDrawnIndex = drawableIndex;
-}
-
-function loadImage(index) {
-const safeIndex = clamp(index, 0, frameCount - 1);
-
-if (imageCache.has(safeIndex)) 
-return;
-
-
-
-if (loadingImages.has(safeIndex)) 
-return;
-
-
-
-loadingImages.add(safeIndex);
-
-const img = new Image();
-img.decoding = "async";
-img.src = getFramePath(safeIndex);
-
-img.onload = () => {
-loadingImages.delete(safeIndex);
-imageCache.set(safeIndex, img);
-
-trimCache(Math.round(currentFrame));
-
-if (! animationStarted && safeIndex === 0) {
-animationStarted = true;
-resizeCanvas();
-drawFrame(0);
-animate();
-}
+  shouldSeekAgain = false;
+  video.currentTime = targetVideoTime;
 };
 
-img.onerror = () => {
-loadingImages.delete(safeIndex);
-console.warn("Kon frame niet laden:", img.src);
+const showCurtainPanels = (
+  scrollProgress
+) => {
+  const curtainProgress =
+    getProgressBetween(
+      scrollProgress,
+      CURTAIN_START_PROGRESS,
+      CURTAIN_END_PROGRESS
+    );
+
+  curtainPanels.forEach(
+    (panel, index) => {
+      const panelStart =
+        index * CURTAIN_PANEL_STAGGER;
+
+      const panelEnd =
+        panelStart +
+        CURTAIN_PANEL_DURATION;
+
+      const panelProgress =
+        getProgressBetween(
+          curtainProgress,
+          panelStart,
+          panelEnd
+        );
+
+      const insetPercentage =
+        100 - panelProgress * 100;
+
+        panel.style.maskImage = `linear-gradient(to bottom, rgba(0, 0, 0, 0) ${insetPercentage}%, rgba(0, 0, 0, 1) ${insetPercentage}%)`;
+
+      // panel.style.clipPath =
+      //   `inset(${insetPercentage}% 0 0 0)`;
+    }
+  );
 };
-}
 
-function getScrollProgress() {
-const sectionTop = section.offsetTop;
-const sectionHeight = section.offsetHeight;
-const scrollY = window.scrollY;
+// #endregion
 
-const scrollStart = sectionTop;
-const scrollEnd = sectionTop + sectionHeight - window.innerHeight;
+// #region ***  Callback-No Visualisation - callback___  ***********
 
-return clamp((scrollY - scrollStart) / (scrollEnd - scrollStart), 0, 1);
-}
+const callbackUpdateSectionFlowers = () => {
+  const scrollProgress =
+    getScrollProgress();
 
-function updateTargetFrame() {
-const progress = getScrollProgress();
-targetFrame = progress * (frameCount - 1);
-}
+  showVideoFrame(scrollProgress);
+  showCurtainPanels(scrollProgress);
+};
 
-function updateScrollVelocity() {
-const now = performance.now();
+const callbackScheduleVideoUpdate = () => {
+  if (animationFrameId !== null) {
+    return;
+  }
 
-/*
-              Delta time in seconden.
-            */
-const deltaTime = Math.max((now - previousVelocityTime) / 1000, 1 / 60);
+  animationFrameId =
+    window.requestAnimationFrame(() => {
+      animationFrameId = null;
 
-/*
-              Hoeveel frames ben je opgeschoven sinds vorige tick?
-            */
-const frameDelta = Math.abs(targetFrame - previousTargetFrameForVelocity);
+      callbackUpdateSectionFlowers();
+    });
+};
 
-/*
-              Velocity in frames per seconde.
-              Dit is beter dan pixels per millisecond,
-              want jouw animatie bestaat uit frames.
-            */
-instantScrollVelocity = frameDelta / deltaTime;
+const callbackHandleVideoLoaded = () => {
+  if (isVideoReady) {
+    return;
+  }
 
-/*
-              Sneller omhoog wanneer je versnelt.
-              Nog sneller omlaag wanneer je vertraagt.
-              Zo blijft step 4/8 niet hangen.
-            */
-if (instantScrollVelocity > scrollVelocity) {
-scrollVelocity = scrollVelocity * 0.35 + instantScrollVelocity * 0.65;
-} else {
-scrollVelocity = scrollVelocity * 0.18 + instantScrollVelocity * 0.82;
-} previousTargetFrameForVelocity = targetFrame;
-previousVelocityTime = now;
-}
+  isVideoReady = true;
 
-function getAdaptivePreloadStep() { /*
-              Belangrijk:
-              Bij traag/normaal scrollen ALTIJD step 1.
-              Dus elk frame blijft mogelijk.
-            */
+  video.pause();
 
-if (instantScrollVelocity < 45) {
-return 1;
-}
+  const scrollProgress =
+    getScrollProgress();
 
-/*
-              Alleen bij echt hard scrollen grover preloaden.
-            */
-if (scrollVelocity > 200) {
-return 8;
-}
+  const videoProgress =
+    getProgressBetween(
+      scrollProgress,
+      VIDEO_START_PROGRESS,
+      VIDEO_END_PROGRESS
+    );
 
-if (scrollVelocity > 90) {
-return 4;
-}
+  targetVideoTime =
+    videoProgress * getMaximumVideoTime();
 
-return 1;
-}
+  video.currentTime = targetVideoTime;
 
-function getPreloadRadius(step) { /*
-              Bij step 1 laden we veel fijne frames dichtbij.
-              Bij step 4/8 laden we verder vooruit/achteruit,
-              maar met grotere sprongen.
-            */
-if (step === 1) 
-return 34;
+  showCurtainPanels(scrollProgress);
+};
 
+const callbackHandleVideoSeeked = () => {
+  const timeDifference = Math.abs(
+    targetVideoTime - video.currentTime
+  );
 
+  if (
+    shouldSeekAgain ||
+    timeDifference >=
+      MINIMUM_SEEK_DIFFERENCE
+  ) {
+    callbackScheduleVideoUpdate();
+  }
+};
 
-if (step === 4) 
-return 64;
+const callbackHandleVisibilityChange = () => {
+  if (!video) {
+    return;
+  }
 
+  if (document.hidden) {
+    video.pause();
+  }
+};
 
+// #endregion
 
-if (step === 8) 
-return 96;
+// #region ***  Data Access - get___                     ***********
 
+const getClampedValue = (
+  value,
+  minimum,
+  maximum
+) => {
+  return Math.min(
+    Math.max(value, minimum),
+    maximum
+  );
+};
 
+const getProgressBetween = (
+  progress,
+  startProgress,
+  endProgress
+) => {
+  const progressDistance = Math.max(
+    endProgress - startProgress,
+    Number.EPSILON
+  );
 
-return 34;
-}
+  return getClampedValue(
+    (
+      progress -
+      startProgress
+    ) /
+      progressDistance,
+    0,
+    1
+  );
+};
 
-function preloadAround(index, step) {
-const center = clamp(index, 0, frameCount - 1);
-const radius = getPreloadRadius(step);
+const getMaximumVideoTime = () => {
+  if (
+    !video ||
+    !Number.isFinite(video.duration)
+  ) {
+    return 0;
+  }
 
-const start = clamp(center - radius, 0, frameCount - 1);
-const end = clamp(center + radius, 0, frameCount - 1);
+  return Math.max(
+    video.duration -
+      1 / VIDEO_FRAME_RATE,
+    0
+  );
+};
 
-/*
-              Bij snel scrollen laden we grover:
-              step 4 = 1000, 1004, 1008...
-              step 8 = 1000, 1008, 1016...
-            */
-let first = Math.ceil(start / step) * step;
+const getScrollProgress = () => {
+  const sectionTop =
+    section.getBoundingClientRect().top +
+    window.scrollY;
 
-for (let i = first; i <= end; i += step) {
-loadImage(i);
-}
+  const scrollStart = sectionTop;
 
-/*
-              Super belangrijk:
-              de exacte huidige frame altijd proberen laden.
-              Dus ook als step 8 is.
-            */
-loadImage(center);
+  const scrollEnd =
+    sectionTop +
+    section.offsetHeight -
+    window.innerHeight;
 
-/*
-              Bij normale/tragere scroll direct fijne frames rond de positie laden.
-            */
-if (step === 1) {
-for (let i = center - 12; i <= center + 12; i++) {
-if (i >= 0 && i < frameCount) {
-loadImage(i);
-}
-}
-}
-}
+  const scrollDistance = Math.max(
+    scrollEnd - scrollStart,
+    1
+  );
 
-function trimCache(centerIndex) {
-if (imageCache.size<= maxCachedImages) return;
+  return getClampedValue(
+    (
+      window.scrollY -
+      scrollStart
+    ) /
+      scrollDistance,
+    0,
+    1
+  );
+};
 
-            const keys = Array.from(imageCache.keys());
+// #endregion
 
-            keys.sort((a, b) => {
-return Math.abs(b - centerIndex) - Math.abs(a - centerIndex);
-}) 
+// #region ***  Event Listeners - listenTo___            ***********
 
+const listenToWindowScroll = () => {
+  window.addEventListener(
+    'scroll',
+    callbackScheduleVideoUpdate,
+    {
+      passive: true,
+    }
+  );
+};
 
-while (imageCache.size > maxCachedImages && keys.length) {
-const farthestKey = keys.shift();
+const listenToWindowResize = () => {
+  window.addEventListener(
+    'resize',
+    callbackScheduleVideoUpdate
+  );
+};
 
-if (farthestKey !== lastDrawnIndex) {
-imageCache.delete(farthestKey);
-}
-}
+const listenToVideoEvents = () => {
+  video.addEventListener(
+    'loadeddata',
+    callbackHandleVideoLoaded,
+    {
+      once: true,
+    }
+  );
 
+  video.addEventListener(
+    'seeked',
+    callbackHandleVideoSeeked
+  );
+};
 
+const listenToVisibilityChange = () => {
+  document.addEventListener(
+    'visibilitychange',
+    callbackHandleVisibilityChange
+  );
+};
 
-}
+// #endregion
 
-function animate() {
-updateTargetFrame();
-updateScrollVelocity();
+// #region ***  Init / DOMContentLoaded                  ***********
 
-const adaptiveStep = getAdaptivePreloadStep();
+const initSectionFlowers = () => {
+  section = document.querySelector(
+    '.js-section-flowers'
+  );
 
-/*
-              Bij snel scrollen mag hij directer volgen.
-              Bij traag scrollen blijft het smooth.
-            */
-let smoothness;
+  if (!section) {
+    return;
+  }
 
-if (adaptiveStep === 8) {
-smoothness = 0.42;
-} else if (adaptiveStep === 4) {
-smoothness = 0.32;
-} else {
-smoothness = 0.18;
-} currentFrame += (targetFrame - currentFrame) * smoothness;
+  video = section.querySelector(
+    '.js-section-flowers-video'
+  );
 
-const roundedFrame = Math.round(currentFrame);
+  curtainPanels = [
+    ...section.querySelectorAll(
+      '.js-curtain-panel'
+    ),
+  ].sort(
+    (panelA, panelB) =>
+      Number(panelA.dataset.panel) -
+      Number(panelB.dataset.panel)
+  );
 
-preloadAround(roundedFrame, adaptiveStep);
+  if (!video || !curtainPanels.length) {
+    return;
+  }
 
-/*
-              We tekenen altijd de echte huidige frame.
-              Niet quantizen naar step 4 of step 8.
-              Step is alleen voor preload.
-            */
-drawFrame(roundedFrame);
+  video.pause();
+  video.muted = true;
 
-trimCache(roundedFrame);
+  listenToWindowScroll();
+  listenToWindowResize();
+  listenToVideoEvents();
+  listenToVisibilityChange();
 
-requestAnimationFrame(animate);
-}
+  callbackScheduleVideoUpdate();
 
-window.addEventListener("resize", resizeCanvas);
+  if (video.readyState >= 2) {
+    callbackHandleVideoLoaded();
+  } else {
+    video.load();
+  }
+};
 
-/*
-          Eerste frame laden en starten.
-        */
-loadImage(0);
-preloadAround(0, 1);
+document.addEventListener(
+  'DOMContentLoaded',
+  initSectionFlowers
+);
+
+// #endregion

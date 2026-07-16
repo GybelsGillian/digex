@@ -1,1 +1,18 @@
 @use 'config' as *;
+
+.o-curtain {
+    position: absolute;
+    bottom: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__panel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: $color-neutral-white;
+        // mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 0%);
+    }
+}

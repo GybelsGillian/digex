@@ -1,1 +1,7 @@
+@use 'sass:map';
 @use '../../config' as *;
+
+.c-footer {
+    padding-bottom: map.get($section-paddings, md);
+    background-color: $color-neutral-navyblack;
+}
