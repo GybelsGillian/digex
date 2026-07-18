@@ -2,13 +2,17 @@
 
 .c-navbar {
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     width: 100%;
+    mix-blend-mode: difference;
+    color: white;
 
     &__logo {
         margin-right: auto;
 
-        svg {}
+        svg {
+            fill: white;
+        }
     }
 
     &__inner {

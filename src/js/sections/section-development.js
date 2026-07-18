@@ -3,6 +3,7 @@ import { createCurtainAnimation } from '../animations/animation-curtain.js';
 // #region ***  DOM references                           ***********
 
 let section;
+let wrap;
 let rock;
 let curtainAnimation;
 
@@ -17,12 +18,11 @@ const ROCK_END_TRANSLATE_Y = 0;
 
 const CURTAIN_START_PROGRESS = 0.7;
 const CURTAIN_END_PROGRESS = 1;
+const CURTAIN_PANEL_COUNT = 5;
 const CURTAIN_PANEL_DURATION = 0.5;
 const CURTAIN_PANEL_STAGGER = 0.125;
-const CURTAIN_START_PERCENTAGE = 100;
-const CURTAIN_END_PERCENTAGE = 0;
-const CURTAIN_EFFECT = 'mask';
-const CURTAIN_MASK_DIRECTION = 'to bottom';
+const CURTAIN_MASK_DIRECTION = 'to top';
+const CURTAIN_MASK_ACTION = 'hide';
 
 // #endregion
 
@@ -106,30 +106,28 @@ const listenToWindowResize = () => {
 
 const initSectionDevelopment = () => {
   section = document.querySelector('.js-section-development');
- console.log('initSectionDevelopment', section);
+
   if (!section) {
     return;
   }
 
+  wrap = section.querySelector('.s-development__wrap');
   rock = section.querySelector('.js-section-development-rock');
-  const curtain = section.querySelector('.js-curtain');
 
-  if (!rock || !curtain) {
+  if (!wrap || !rock) {
     return;
   }
 
   curtainAnimation = createCurtainAnimation({
-    root: curtain,
-    panelSelector: '.js-curtain-panel',
-    panelOrderAttribute: 'panel',
+    type: 'target-mask',
+    target: wrap,
+    panelCount: CURTAIN_PANEL_COUNT,
     startProgress: CURTAIN_START_PROGRESS,
     endProgress: CURTAIN_END_PROGRESS,
     panelDuration: CURTAIN_PANEL_DURATION,
     panelStagger: CURTAIN_PANEL_STAGGER,
-    startPercentage: CURTAIN_START_PERCENTAGE,
-    endPercentage: CURTAIN_END_PERCENTAGE,
-    effect: CURTAIN_EFFECT,
     maskDirection: CURTAIN_MASK_DIRECTION,
+    maskAction: CURTAIN_MASK_ACTION,
   });
 
   if (!curtainAnimation) {

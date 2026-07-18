@@ -1,0 +1,61 @@
+{% extends '_shared/_layouts/_layout-main.twig' %}
+
+{% set title = 'DIGEX - We create digital experiences' %}
+
+{% block scripts %}
+	{{ craft.vite.script('src/js/pages/home.js', false) }}
+{% endblock %}
+
+{% block content %}
+	<header class="s-hero-cases">
+		{% set homePage = craft.entries.section('pageHome').one() %}
+
+		<div class="container">
+			<div class="s-hero-cases__inner">
+				<h1>Our work</h1>
+				<p>From kickoff to launch, DIGEX trust us to stay close, adapt fast, and deliver without any drama.</p>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="s-featured-cases">
+			<h2 class="u-visual-hidden">Featured Cases</h2>
+
+			<ul class="s-featured-cases__list">
+				<li>
+					<article class="s-featured-cases__item">
+						<img class="s-featured-cases__item-logo" src="/assets/placeholders/logo-placeholder.png" alt="Logo of the case study">
+
+						<header class="s-featured-cases__item-header">
+							<h3 class="s-featured-cases__item-title">Case Study 1</h3>
+							<p class="s-featured-cases__item-standfirst">Short description of the case study.</p>
+						</header>
+
+						<p>
+							<span>Figma</span>
+							<span>Adobe Ps</span>
+						</p>
+
+						<a href="#" class="s-featured-cases__item-link">Read more about this case study</a>
+					</article>
+				</li>
+			</ul>
+		</section>
+
+		<section>
+			<header>
+				<h2 class="u-visual-hidden">More Cases</h2>
+			</header>
+
+			<ul>
+				<li>
+					<article class="c-card-case">
+
+						<header></header>
+					</article>
+				</li>
+			</ul>
+		</section>
+	</main>
+{% endblock %}

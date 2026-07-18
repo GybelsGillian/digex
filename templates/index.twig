@@ -12,34 +12,69 @@
 
 		<div class="container">
 			<div class="s-hero-home__inner">
-				<div class="s-hero-home__heading-container">
-					<h1 class="s-hero-home__heading fs-h1-md">
-						<span data-text="bold">We</span>
-						<span data-text="serif">create</span>
-						<br>
-						<span data-text="serif">your</span>
-						<span data-text="bold">digital</span>
-						<span data-text="cursive">experience</span>
-					</h1>
-					<a class="c-btn-secondary c-btn-secondary--md" href="#">Request your price</a>
+				<div class="s-hero-home__text-container">
+					<div class="s-hero-home__heading-container">
+						<h1 class="s-hero-home__heading fs-h1-md">
+							<span data-text="bold">We</span>
+							<span data-text="serif">create</span>
+							<br>
+							<span data-text="serif">your</span>
+							<span data-text="bold">digital</span>
+							<span data-text="cursive">experience</span>
+						</h1>
+						<a class="c-btn-secondary c-btn-secondary--md" href="#">Request your price</a>
+					</div>
+					<div class="s-hero-home__stats">
+						<article>
+							<h2>128+</h2>
+							<p>128+ projects completed</p>
+						</article>
+						<article>
+							<h2>50+</h2>
+							<p>50+ satisfied clients</p>
+						</article>
+						<article>
+							<h2>10+</h2>
+							<p>10+ years of experience</p>
+						</article>
+					</div>
 				</div>
-				<div class="s-hero-home__stats">
-					<article>
-						<h2>128+</h2>
-						<p>128+ projects completed</p>
-					</article>
-					<article>
-						<h2>50+</h2>
-						<p>50+ satisfied clients</p>
-					</article>
-					<article>
-						<h2>10+</h2>
-						<p>10+ years of experience</p>
-					</article>
+
+				<div class="s-hero-home__reviews">
+					<div class="s-hero-home__showreel">
+						<img class="s-hero-home__showreel-video" src="/assets/placeholders/showreel.png" alt="Illustration of a showreel">
+						<p class="s-hero-home__showreel-text">
+							<span>Showreel</span>
+							<span>2026</span>
+						</p>
+					</div>
+
+					<div>
+						<span class="c-badge-profile c-badge-profile--lg">
+							<img src="" alt="">
+						</span>
+						<span class="c-badge-profile c-badge-profile--lg">
+							<img src="" alt="">
+						</span>
+						<span class="c-badge-profile c-badge-profile--lg">
+							<img src="" alt="">
+						</span>
+						<span class="c-badge-profile c-badge-profile--lg">
+							<img src="" alt="">
+						</span>
+						<span class="c-badge-profile c-badge-profile--lg">
+							<img src="" alt="">
+						</span>
+					</div>
+					<a href="#" class="c-badge-reviews">
+						<strong class="c-badge-reviews__rating">4.8</strong>
+						<div class="c-badge-reviews__stars"></div>
+						<p class="c-badge-reviews__count">15 reviews</p>
+					</a>
 				</div>
 
 				<img class="s-hero-home__beetle" src="/assets/illustrations/beetle.webp" alt="Illustration of a beetle">
-			</div>
+			</p>
 		</div>
 	</header>
 
@@ -116,19 +151,48 @@
 			<div class="s-development__wrap">
 				<video class="s-development__video" src="/assets/textures/dark-moody-clouds.mov" autoplay muted loop></video>
 				<img class="s-development__image js-section-development-rock" src="/assets/textures/black-rock-stone-podium.png" alt="Illustration of a flower">
+			</div>
+		</section>
 
-				<div class="o-curtain js-curtain">
-					<div class="o-curtain__panel js-curtain-panel" data-panel="5"></div>
-					<div class="o-curtain__panel js-curtain-panel" data-panel="4"></div>
-					<div class="o-curtain__panel js-curtain-panel" data-panel="3"></div>
-					<div class="o-curtain__panel js-curtain-panel" data-panel="2"></div>
-					<div class="o-curtain__panel js-curtain-panel" data-panel="1"></div>
+		<section class="s-motiondesign js-section-motiondesign">
+			<div class="s-motiondesign__wrap">
+				<div class="s-motiondesign__bg-text">
+					MOTION DESIGN MOTION DESIGN<br>
+					DESIGN MOTION DESIGN MOTION DESIGN<br>
+					MOTION DESIGN MOTION DESIGN<br>
+					DESIGN MOTION DESIGN MOTION DESIGN<br>
 				</div>
 			</div>
 		</section>
 
-		<section style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-			<h2>Hello</h2>
+		<section class="s-tips-inspiration">
+			<div class="container">
+				<header class="s-tips-inspiration__header">
+					<h2 class="s-tips-inspiration__heading">Tips &amp; inspiration</h2>
+					<a class="c-btn-text" href="#">View all</a>
+				</header>
+
+				<ul>
+					<li>
+						<article class="c-card-blog">
+							<picture class="c-card-blog__image">
+								<source srcset="/assets/laptop-mockup.webp" type="image/webp">
+								<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
+							</picture>
+							<div class="c-card-blog__text-container">
+								<header class="c-card-blog__header">
+									<div class="c-card-blog__tags">
+										<span class="c-badge-card">UX/UI</span>
+									</div>
+									<h3 class="c-card-blog__title">Audyn</h3>
+								</header>
+								<p class="c-card-blog__date">October 5, 2026</p>
+								<a class="c-btn-text" href="#">View details</a>
+							</div>
+						</article>
+					</li>
+				</ul>
+			</div>
 		</section>
 	</main>
 {% endblock %}
