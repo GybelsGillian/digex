@@ -12,4 +12,9 @@
         padding: .5rem 1rem;
         border-radius: map.get($border-radius, pill);
     }
+
+    &--dark {
+        background-color: $color-neutral-navyblack;
+        color: $color-neutral-white;
+    }
 }

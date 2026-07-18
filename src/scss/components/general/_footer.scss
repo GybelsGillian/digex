@@ -4,4 +4,55 @@
 .c-footer {
     padding-bottom: map.get($section-paddings, md);
     background-color: $color-neutral-navyblack;
+    color: $color-neutral-softwhite;
+
+    &__bg {
+        margin-bottom: map.get($section-paddings, md);
+        width: 100%;
+        background-image: url('/assets/textures/texture-vertical-stripes.png');
+        aspect-ratio: 1600/96;
+        background-size: cover;
+        background-position: center;
+    }
+
+    &__row {
+        row-gap: map.get($section-gaps, xl);
+    }
+
+    &__branding {
+        display: flex;
+        flex-direction: column;
+        gap: map.get($section-gaps, sm);
+    }
+
+    &__branding-details {
+        display: flex;
+        flex-direction: column;
+        gap: map.get($section-gaps, xxs);
+    }
+
+    &__branding-socials {
+        display: flex;
+        gap: map.get($section-gaps, xs);
+    }
+
+    &__nav {
+        display: flex;
+    }
+
+    &__nav-section {
+        display: flex;
+        flex-direction: column;
+        gap: map.get($section-gaps, xs);
+        width: 100%;
+    }
+
+    &__bottom {
+        display: flex;
+        align-items: center;
+    }
+
+    &__bottom-logo {
+        margin-right: auto;
+    }
 }

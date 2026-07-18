@@ -3,17 +3,18 @@ import { createCurtainAnimation } from '../animations/animation-curtain.js';
 // #region ***  DOM references                           ***********
 
 let section;
-let video;
+let rock;
 let curtainAnimation;
 
 // #endregion
 
 // #region ***  Configuration                            ***********
 
-const VIDEO_FRAME_RATE = 60;
-const MINIMUM_SEEK_DIFFERENCE = 0.5 / VIDEO_FRAME_RATE;
-const VIDEO_START_PROGRESS = 0;
-const VIDEO_END_PROGRESS = 1;
+const ROCK_START_PROGRESS = 0.15;
+const ROCK_END_PROGRESS = 0.3;
+const ROCK_START_TRANSLATE_Y = 100;
+const ROCK_END_TRANSLATE_Y = 0;
+
 const CURTAIN_START_PROGRESS = 0.7;
 const CURTAIN_END_PROGRESS = 1;
 const CURTAIN_PANEL_DURATION = 0.5;
@@ -27,95 +28,39 @@ const CURTAIN_MASK_DIRECTION = 'to bottom';
 
 // #region ***  State                                    ***********
 
-let isVideoReady = false;
-let targetVideoTime = 0;
 let animationFrameId = null;
-let shouldSeekAgain = false;
 
 // #endregion
 
 // #region ***  Callback-Visualisation - show___         ***********
 
-const showVideoFrame = (scrollProgress) => {
-  if (!isVideoReady) {
-    return;
-  }
+const showRockPosition = (scrollProgress) => {
+  const rockProgress = getProgressBetween(scrollProgress, ROCK_START_PROGRESS, ROCK_END_PROGRESS);
+  const translateY = ROCK_START_TRANSLATE_Y + rockProgress * (ROCK_END_TRANSLATE_Y - ROCK_START_TRANSLATE_Y);
 
-  const videoProgress = getProgressBetween(scrollProgress, VIDEO_START_PROGRESS, VIDEO_END_PROGRESS);
-
-  targetVideoTime = videoProgress * getMaximumVideoTime();
-
-  if (video.seeking) {
-    shouldSeekAgain = true;
-    return;
-  }
-
-  const timeDifference = Math.abs(targetVideoTime - video.currentTime);
-
-  if (timeDifference < MINIMUM_SEEK_DIFFERENCE) {
-    shouldSeekAgain = false;
-    return;
-  }
-
-  shouldSeekAgain = false;
-  video.currentTime = targetVideoTime;
+  rock.style.transform = `translateX(-50%) translateY(${translateY}%)`;
 };
 
 // #endregion
 
 // #region ***  Callback-No Visualisation - callback___  ***********
 
-const callbackUpdateSectionFlowers = () => {
+const callbackUpdateSectionDevelopment = () => {
   const scrollProgress = getScrollProgress();
 
-  showVideoFrame(scrollProgress);
+  showRockPosition(scrollProgress);
   curtainAnimation.update(scrollProgress);
 };
 
-const callbackScheduleVideoUpdate = () => {
+const callbackScheduleSectionUpdate = () => {
   if (animationFrameId !== null) {
     return;
   }
 
   animationFrameId = window.requestAnimationFrame(() => {
     animationFrameId = null;
-    callbackUpdateSectionFlowers();
+    callbackUpdateSectionDevelopment();
   });
-};
-
-const callbackHandleVideoLoaded = () => {
-  if (isVideoReady) {
-    return;
-  }
-
-  isVideoReady = true;
-  video.pause();
-
-  const scrollProgress = getScrollProgress();
-  const videoProgress = getProgressBetween(scrollProgress, VIDEO_START_PROGRESS, VIDEO_END_PROGRESS);
-
-  targetVideoTime = videoProgress * getMaximumVideoTime();
-  video.currentTime = targetVideoTime;
-
-  curtainAnimation.update(scrollProgress);
-};
-
-const callbackHandleVideoSeeked = () => {
-  const timeDifference = Math.abs(targetVideoTime - video.currentTime);
-
-  if (shouldSeekAgain || timeDifference >= MINIMUM_SEEK_DIFFERENCE) {
-    callbackScheduleVideoUpdate();
-  }
-};
-
-const callbackHandleVisibilityChange = () => {
-  if (!video) {
-    return;
-  }
-
-  if (document.hidden) {
-    video.pause();
-  }
 };
 
 // #endregion
@@ -132,14 +77,6 @@ const getProgressBetween = (progress, startProgress, endProgress) => {
   return getClampedValue((progress - startProgress) / progressDistance, 0, 1);
 };
 
-const getMaximumVideoTime = () => {
-  if (!video || !Number.isFinite(video.duration)) {
-    return 0;
-  }
-
-  return Math.max(video.duration - 1 / VIDEO_FRAME_RATE, 0);
-};
-
 const getScrollProgress = () => {
   const sectionTop = section.getBoundingClientRect().top + window.scrollY;
   const scrollStart = sectionTop;
@@ -154,43 +91,30 @@ const getScrollProgress = () => {
 // #region ***  Event Listeners - listenTo___            ***********
 
 const listenToWindowScroll = () => {
-  window.addEventListener('scroll', callbackScheduleVideoUpdate, {
+  window.addEventListener('scroll', callbackScheduleSectionUpdate, {
     passive: true,
   });
 };
 
 const listenToWindowResize = () => {
-  window.addEventListener('resize', callbackScheduleVideoUpdate);
-};
-
-const listenToVideoEvents = () => {
-  video.addEventListener('loadeddata', callbackHandleVideoLoaded, {
-    once: true,
-  });
-
-  video.addEventListener('seeked', callbackHandleVideoSeeked);
-};
-
-const listenToVisibilityChange = () => {
-  document.addEventListener('visibilitychange', callbackHandleVisibilityChange);
+  window.addEventListener('resize', callbackScheduleSectionUpdate);
 };
 
 // #endregion
 
 // #region ***  Init / DOMContentLoaded                  ***********
 
-const initSectionFlowers = () => {
-  section = document.querySelector('.js-section-flowers');
-
+const initSectionDevelopment = () => {
+  section = document.querySelector('.js-section-development');
+ console.log('initSectionDevelopment', section);
   if (!section) {
     return;
   }
 
-  video = section.querySelector('.js-section-flowers-video');
-
+  rock = section.querySelector('.js-section-development-rock');
   const curtain = section.querySelector('.js-curtain');
 
-  if (!video || !curtain) {
+  if (!rock || !curtain) {
     return;
   }
 
@@ -212,23 +136,12 @@ const initSectionFlowers = () => {
     return;
   }
 
-  video.pause();
-  video.muted = true;
-
   listenToWindowScroll();
   listenToWindowResize();
-  listenToVideoEvents();
-  listenToVisibilityChange();
 
-  callbackScheduleVideoUpdate();
-
-  if (video.readyState >= 2) {
-    callbackHandleVideoLoaded();
-  } else {
-    video.load();
-  }
+  callbackScheduleSectionUpdate();
 };
 
-document.addEventListener('DOMContentLoaded', initSectionFlowers);
+document.addEventListener('DOMContentLoaded', initSectionDevelopment);
 
 // #endregion

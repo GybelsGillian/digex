@@ -55,6 +55,12 @@
     font-family: $font-family-heading;
 }
 
+@mixin fs-body-xxl {
+    font-size: 1.375rem;
+    line-height: 2rem;
+    font-family: $font-family-body;
+}
+
 @mixin fs-body-xl {
     font-size: 1.25rem;
     line-height: 2rem;

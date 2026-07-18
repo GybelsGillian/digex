@@ -58,10 +58,14 @@
 			</div>
 		</section>
 
-		<section class="s-cta-projects js-section-cta-projects">
-			<div class="s-cta-projects__wrap" style="--projects: 3">
-				<div class="s-cta-projects__slide">
-					<article class="c-card-project-lg">
+		<section class="s-cta-projects js-section-cta-projects" style="--projects: 3">
+			<div class="s-cta-projects__wrap">
+				<div class="s-cta-projects__slide js-section-cta-projects-slide">
+					<header class="s-cta-projects__header js-section-cta-projects-slideitem">
+						<h2 class="fs-h2-md">Featured cases</h2>
+						<a class="c-btn-secondary c-btn-secondary--md c-btn-secondary--dark" href="#">View all cases</a>
+					</header>
+					<article class="c-card-project-lg js-section-cta-projects-slideitem">
 						<picture class="c-card-project-lg__image">
 							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
 							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
@@ -74,7 +78,7 @@
 							<a href="#" class="c-card-project-lg__link">Explore project</a>
 						</div>
 					</article>
-					<article class="c-card-project-lg">
+					<article class="c-card-project-lg js-section-cta-projects-slideitem">
 						<picture class="c-card-project-lg__image">
 							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
 							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
@@ -87,7 +91,7 @@
 							<a href="#" class="c-card-project-lg__link">Explore project</a>
 						</div>
 					</article>
-					<article class="c-card-project-lg">
+					<article class="c-card-project-lg js-section-cta-projects-slideitem">
 						<picture class="c-card-project-lg__image">
 							<source srcset="/assets/laptop-mockup.webp" type="image/webp">
 							<img src="/assets/laptop-mockup.webp" alt="Illustration of a flower">
@@ -100,18 +104,31 @@
 							<a href="#" class="c-card-project-lg__link">Explore project</a>
 						</div>
 					</article>
+					<footer class="s-cta-projects__footer js-section-cta-projects-slideitem">
+						<p class="fs-body-xxl">Explore our complete collection of digital creations.</p>
+						<a class="c-btn-secondary c-btn-secondary--md c-btn-secondary--dark" href="#">View portfolio</a>
+					</footer>
 				</div>
 			</div>
 		</section>
 
-		<section class="s-development">
+		<section class="s-development js-section-development">
 			<div class="s-development__wrap">
 				<video class="s-development__video" src="/assets/textures/dark-moody-clouds.mov" autoplay muted loop></video>
+				<img class="s-development__image js-section-development-rock" src="/assets/textures/black-rock-stone-podium.png" alt="Illustration of a flower">
+
+				<div class="o-curtain js-curtain">
+					<div class="o-curtain__panel js-curtain-panel" data-panel="5"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="4"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="3"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="2"></div>
+					<div class="o-curtain__panel js-curtain-panel" data-panel="1"></div>
+				</div>
 			</div>
 		</section>
 
 		<section style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-			<h2>GAY</h2>
+			<h2>Hello</h2>
 		</section>
 	</main>
 {% endblock %}

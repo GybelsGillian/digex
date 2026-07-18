@@ -100,55 +100,74 @@
 }
 
 .s-cta-projects {
-    height: 550vh;
+    --projects: 0;
+    --section-height: 500vh;
+
+    position: relative;
     display: flex;
-    margin-top: -50vh;
+    height: var(--section-height);
+    margin-top: -75vh;
 
     &__wrap {
-        :root {
-            --projects: 0;
-        }
-
         position: sticky;
         top: 0;
-        overflow: hidden;
-        display: flex;
 
+        display: flex;
         width: 100vw;
         height: 100vh;
-
+        overflow: hidden;
     }
 
     &__slide {
         display: flex;
-
         align-items: center;
-        transform: translateX(-50%);
-        background-color: $color-neutral-white;
-        left: 0;
 
+        width: max-content;
+        min-width: max-content;
         height: 100vh;
 
-        width: 150vw;
-        min-width: 150vw;
+        background-color: $color-neutral-white;
+        clip-path: inset(0);
+        will-change: transform;
+        padding-top: $navbar-height;
 
         &>* {
-            width: 100%;
-            // flex-shrink: 0;
+            flex: 0 0 50vw;
+            width: 50vw;
+            height: 100%;
+
+            transform: translate3d(0, 100%, 0);
+            will-change: transform;
         }
+
+        &> :nth-child(-n + 2) {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    &__header,
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: map.get($section-gaps, md);
     }
 }
 
 .c-card-project-lg {
-    padding: map.get($component-paddings, lg) $grid-gutter-width;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: map.get($component-paddings, xl) $grid-gutter-width;
 
     &__image {
         width: 100%;
         height: auto;
         object-fit: cover;
-        display: none;
 
         img {
+            display: block;
             width: 100%;
             height: auto;
             object-fit: cover;
@@ -157,8 +176,8 @@
 }
 
 .s-development {
-    margin-top: -150vh;
-    height: 400vh;
+    margin-top: -260vh;
+    height: 550vh;
     width: 100%;
 
     &__wrap {
@@ -173,5 +192,23 @@
         justify-content: center;
 
         background-color: $color-neutral-nightnavyblack;
+    }
+
+    &__video {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &__image {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        width: 80%;
+        height: auto;
+        will-change: transform;
     }
 }
