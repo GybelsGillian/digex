@@ -409,7 +409,7 @@ const initMotionDesign = () => {
     });
 
     group.rotation.set(0, 0, 0);
-    group.position.x = -90;
+    group.position.x = 20;
 
     listenToResizeMotionDesign();
     listenToScrollMotionDesign();
