@@ -169,7 +169,9 @@ const motionDesignConfig = {
         referenceAspect: 16 / 9,
     },
     ribbon: {
-        width: 240,
+        borderWidth: 1,
+        cardBorderGap: 32,
+        borderColor: 0xe60012,
         radius: 760,
         turns: 2.65,
         verticalSpread: 2157.42,
@@ -191,6 +193,11 @@ const { radius, turns, verticalSpread } = motionDesignConfig.ribbon;
 const centerProgress = 0.5;
 const startAngle = -centerProgress * Math.PI * 2 * turns;
 const curveLength = Math.hypot(Math.PI * 2 * turns * radius, verticalSpread);
+const ribbonBorderOffset =
+    motionDesignConfig.card.height / 2 +
+    motionDesignConfig.ribbon.cardBorderGap +
+    motionDesignConfig.ribbon.borderWidth / 2;
+const ribbonWidth = ribbonBorderOffset * 2;
 
 const CARD_GAP = 16;
 const CARD_LABELS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
@@ -264,24 +271,38 @@ const getScrollProgress = () => {
 };
 
 
-const ribbonGeometry = new THREE.PlaneGeometry(
-    curveLength,
-    motionDesignConfig.ribbon.width,
-    motionDesignConfig.ribbon.widthSegments,
+const createRibbonStripGeometry = (
+    width,
+    offsetY = 0,
+    heightSegments = 1,
+) => {
+    const geometry = new THREE.PlaneGeometry(
+        curveLength,
+        width,
+        motionDesignConfig.ribbon.widthSegments,
+        heightSegments,
+    );
+    const position = geometry.attributes.position;
+
+    for (let i = 0; i < position.count; i++) {
+        const localX = position.getX(i);
+        const localY = position.getY(i);
+        const progress = localX / curveLength + 0.5;
+        const point = getPoint(progress, localY + offsetY);
+
+        position.setXYZ(i, point.x, point.y, point.z);
+    }
+
+    geometry.computeVertexNormals();
+
+    return geometry;
+};
+
+const ribbonGeometry = createRibbonStripGeometry(
+    ribbonWidth,
+    0,
     motionDesignConfig.ribbon.heightSegments,
 );
-const ribbonPosition = ribbonGeometry.attributes.position;
-
-for (let i = 0; i < ribbonPosition.count; i++) {
-    const localX = ribbonPosition.getX(i);
-    const localY = ribbonPosition.getY(i);
-    const progress = localX / curveLength + 0.5;
-    const point = getPoint(progress, localY);
-
-    ribbonPosition.setXYZ(i, point.x, point.y, point.z);
-}
-
-ribbonGeometry.computeVertexNormals();
 
 const ribbonMaterial = new THREE.MeshBasicMaterial({
     color: 0xe60012,
@@ -290,6 +311,25 @@ const ribbonMaterial = new THREE.MeshBasicMaterial({
 });
 const ribbon = new THREE.Mesh(ribbonGeometry, ribbonMaterial);
 ribbon.visible = DEV_MODE;
+
+const ribbonBorderMaterial = new THREE.MeshBasicMaterial({
+    color: motionDesignConfig.ribbon.borderColor,
+    side: THREE.DoubleSide,
+});
+const ribbonBorderTop = new THREE.Mesh(
+    createRibbonStripGeometry(
+        motionDesignConfig.ribbon.borderWidth,
+        ribbonBorderOffset,
+    ),
+    ribbonBorderMaterial,
+);
+const ribbonBorderBottom = new THREE.Mesh(
+    createRibbonStripGeometry(
+        motionDesignConfig.ribbon.borderWidth,
+        -ribbonBorderOffset,
+    ),
+    ribbonBorderMaterial,
+);
 
 // #endregion
 
@@ -319,6 +359,7 @@ const initMotionDesign = () => {
 
     scene.add(group);
     group.add(ribbon);
+    group.add(ribbonBorderTop, ribbonBorderBottom);
 
     CARD_DATA.forEach(({ progress, text }) => {
         createCurvedCard(progress, text);
