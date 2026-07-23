@@ -8,6 +8,7 @@ const section = document.querySelector('.js-section-motiondesign');
 const stage = document.querySelector('#stage');
 
 const cardItems = [];
+const ribbonBorderItems = [];
 let scrollAnimationFrameId = null;
 
 // #endregion
@@ -42,6 +43,30 @@ const showCardPositions = scrollProgress => {
     });
 };
 
+const showRibbonBorderPositions = scrollProgress => {
+    const centerProgress =
+        1 +
+        ribbonBorderHalfProgress -
+        scrollProgress * (1 + ribbonBorderHalfProgress * 2);
+
+    ribbonBorderItems.forEach(borderItem => {
+        const { geometry, localPositions, offsetY } = borderItem;
+        const position = geometry.attributes.position;
+
+        for (let i = 0; i < position.count; i++) {
+            const vertexIndex = i * 3;
+            const localX = localPositions[vertexIndex];
+            const localY = localPositions[vertexIndex + 1];
+            const progress = centerProgress + localX / curveLength;
+            const point = getPoint(progress, localY + offsetY);
+
+            position.setXYZ(i, point.x, point.y, point.z);
+        }
+
+        position.needsUpdate = true;
+    });
+};
+
 // #endregion
 
 // #region ***  Callback-No Visualisation - callback___  ***********
@@ -58,7 +83,10 @@ const callbackResizeMotionDesign = () => {
 };
 
 const callbackUpdateMotionDesign = () => {
-    showCardPositions(getScrollProgress());
+    const scrollProgress = getScrollProgress();
+
+    showCardPositions(scrollProgress);
+    showRibbonBorderPositions(scrollProgress);
 };
 
 const callbackScheduleMotionDesignUpdate = () => {
@@ -170,6 +198,7 @@ const motionDesignConfig = {
     },
     ribbon: {
         borderWidth: 1,
+        borderLength: 2744,
         cardBorderGap: 32,
         borderColor: 0xe60012,
         radius: 760,
@@ -209,6 +238,8 @@ const CARD_DATA = CARD_LABELS.map((text, index) => ({
         centerProgress + (index - cardCenterIndex) * cardProgressStep,
     text,
 }));
+const ribbonBorderLength = motionDesignConfig.ribbon.borderLength;
+const ribbonBorderHalfProgress = ribbonBorderLength / 2 / curveLength;
 
 const CARD_PATH_OVERSCAN =
     motionDesignConfig.card.length / 2 / curveLength;
@@ -316,20 +347,32 @@ const ribbonBorderMaterial = new THREE.MeshBasicMaterial({
     color: motionDesignConfig.ribbon.borderColor,
     side: THREE.DoubleSide,
 });
-const ribbonBorderTop = new THREE.Mesh(
-    createRibbonStripGeometry(
+
+const createMovingRibbonBorder = offsetY => {
+    const borderSegments = Math.max(
+        Math.ceil(
+            motionDesignConfig.ribbon.widthSegments *
+            (ribbonBorderLength / curveLength),
+        ),
+        1,
+    );
+    const geometry = new THREE.PlaneGeometry(
+        ribbonBorderLength,
         motionDesignConfig.ribbon.borderWidth,
-        ribbonBorderOffset,
-    ),
-    ribbonBorderMaterial,
-);
-const ribbonBorderBottom = new THREE.Mesh(
-    createRibbonStripGeometry(
-        motionDesignConfig.ribbon.borderWidth,
-        -ribbonBorderOffset,
-    ),
-    ribbonBorderMaterial,
-);
+        borderSegments,
+        1,
+    );
+    const localPositions = geometry.attributes.position.array.slice();
+    const border = new THREE.Mesh(geometry, ribbonBorderMaterial);
+
+    border.frustumCulled = false;
+    ribbonBorderItems.push({ geometry, localPositions, offsetY });
+
+    return border;
+};
+
+const ribbonBorderTop = createMovingRibbonBorder(ribbonBorderOffset);
+const ribbonBorderBottom = createMovingRibbonBorder(-ribbonBorderOffset);
 
 // #endregion
 
