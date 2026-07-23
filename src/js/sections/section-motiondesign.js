@@ -9,15 +9,45 @@ const stage = document.querySelector('#stage');
 
 const cardItems = [];
 const ribbonBorderItems = [];
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
 let scrollAnimationFrameId = null;
+let hoveredCard = null;
+let pointerIsInsideStage = false;
+let previousFrameTime = null;
 
 // #endregion
 
 // #region ***  Callback-Visualisation - show___         ***********
 
-const showMotionDesign = () => {
+const showMotionDesign = time => {
+    showCardHoverAnimation(time);
     renderer.render(scene, camera);
     requestAnimationFrame(showMotionDesign);
+};
+
+const updateCardGeometry = cardItem => {
+    const {
+        geometry,
+        localPositions,
+        currentProgress,
+        currentScale,
+    } = cardItem;
+    const cardPosition = geometry.attributes.position;
+
+    for (let i = 0; i < cardPosition.count; i++) {
+        const vertexIndex = i * 3;
+        const localX = localPositions[vertexIndex] * currentScale;
+        const localY = localPositions[vertexIndex + 1] * currentScale;
+        const progress = currentProgress + localX / curveLength;
+        const point = getPoint(progress, localY, 8);
+
+        cardPosition.setXYZ(i, point.x, point.y, point.z);
+    }
+
+    cardPosition.needsUpdate = true;
+    geometry.computeBoundingSphere();
 };
 
 const showCardPositions = scrollProgress => {
@@ -25,21 +55,39 @@ const showCardPositions = scrollProgress => {
         (scrollProgress * 2 - 1) * cardScrollHalfDistance;
 
     cardItems.forEach(cardItem => {
-        const { geometry, localPositions, baseProgress } = cardItem;
-        const cardPosition = geometry.attributes.position;
-        const centerProgress = baseProgress + progressOffset;
+        cardItem.currentProgress =
+            cardItem.baseProgress + progressOffset;
+        updateCardGeometry(cardItem);
+    });
+};
 
-        for (let i = 0; i < cardPosition.count; i++) {
-            const vertexIndex = i * 3;
-            const localX = localPositions[vertexIndex];
-            const localY = localPositions[vertexIndex + 1];
-            const progress = centerProgress + localX / curveLength;
-            const point = getPoint(progress, localY, 8);
+const showCardHoverAnimation = time => {
+    const deltaTime =
+        previousFrameTime === null
+            ? 0
+            : Math.min((time - previousFrameTime) / 1000, 0.1);
+    const easing =
+        1 - Math.exp(-motionDesignConfig.card.hoverSpeed * deltaTime);
 
-            cardPosition.setXYZ(i, point.x, point.y, point.z);
+    previousFrameTime = time;
+
+    cardItems.forEach(cardItem => {
+        const targetScale =
+            cardItem.mesh === hoveredCard
+                ? motionDesignConfig.card.hoverScale
+                : 1;
+        const nextScale = THREE.MathUtils.lerp(
+            cardItem.currentScale,
+            targetScale,
+            easing,
+        );
+
+        if (Math.abs(nextScale - cardItem.currentScale) < 0.0001) {
+            return;
         }
 
-        cardPosition.needsUpdate = true;
+        cardItem.currentScale = nextScale;
+        updateCardGeometry(cardItem);
     });
 };
 
@@ -87,6 +135,42 @@ const callbackUpdateMotionDesign = () => {
 
     showCardPositions(scrollProgress);
     showRibbonBorderPositions(scrollProgress);
+
+    if (pointerIsInsideStage) {
+        updateHoveredCard();
+    }
+};
+
+const updateHoveredCard = () => {
+    raycaster.setFromCamera(pointer, camera);
+
+    const intersections = raycaster.intersectObjects(
+        cardItems.map(cardItem => cardItem.mesh),
+        false,
+    );
+
+    hoveredCard = intersections[0]?.object ?? null;
+    renderer.domElement.style.cursor = hoveredCard
+        ? 'pointer'
+        : 'default';
+};
+
+const callbackPointerMoveMotionDesign = event => {
+    const bounds = renderer.domElement.getBoundingClientRect();
+
+    pointer.x =
+        ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+    pointer.y =
+        -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+    pointerIsInsideStage = true;
+
+    updateHoveredCard();
+};
+
+const callbackPointerLeaveMotionDesign = () => {
+    pointerIsInsideStage = false;
+    hoveredCard = null;
+    renderer.domElement.style.cursor = 'default';
 };
 
 const callbackScheduleMotionDesignUpdate = () => {
@@ -181,8 +265,11 @@ const createCurvedCard = (centerProgress, text) => {
 
     cardItems.push({
         geometry: cardGeometry,
+        mesh: card,
         localPositions,
         baseProgress: centerProgress,
+        currentProgress: centerProgress,
+        currentScale: 1,
     });
 };
 
@@ -210,6 +297,8 @@ const motionDesignConfig = {
     card: {
         length: 260,
         height: 240,
+        hoverScale: 1.1,
+        hoverSpeed: 12,
         widthSegments: 50,
         heightSegments: 12,
         textureWidth: 640,
@@ -388,6 +477,17 @@ const listenToScrollMotionDesign = () => {
     });
 };
 
+const listenToPointerMotionDesign = () => {
+    renderer.domElement.addEventListener(
+        'pointermove',
+        callbackPointerMoveMotionDesign,
+    );
+    renderer.domElement.addEventListener(
+        'pointerleave',
+        callbackPointerLeaveMotionDesign,
+    );
+};
+
 // #endregion
 
 // #region ***  Init / DOMContentLoaded                  ***********
@@ -413,8 +513,9 @@ const initMotionDesign = () => {
 
     listenToResizeMotionDesign();
     listenToScrollMotionDesign();
+    listenToPointerMotionDesign();
     callbackScheduleMotionDesignUpdate();
-    showMotionDesign();
+    requestAnimationFrame(showMotionDesign);
 };
 
 document.addEventListener('DOMContentLoaded', initMotionDesign);
