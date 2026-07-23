@@ -203,7 +203,8 @@ const CARD_DATA = CARD_LABELS.map((text, index) => ({
     text,
 }));
 
-const CARD_PATH_OVERSCAN = 0.12;
+const CARD_PATH_OVERSCAN =
+    motionDesignConfig.card.length / 2 / curveLength;
 const firstCardProgress = CARD_DATA[0].progress;
 const lastCardProgress = CARD_DATA[CARD_DATA.length - 1].progress;
 const cardScrollHalfDistance = Math.max(
