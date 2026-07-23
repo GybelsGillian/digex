@@ -7,6 +7,7 @@ import '../../scss/pages/home.scss';
 import '../../js/sections/section-flowers.js';
 import '../../js/sections/section-cta-projects.js';
 import '../../js/sections/section-development.js';
+import '../../js/sections/section-motiondesign.js';
 
 const initHome = function () {
   console.log('Hello world!');

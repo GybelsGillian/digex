@@ -5,6 +5,8 @@ body {
     font-family: $font-family-body;
     background-color: $color-neutral-brokenwhite;
     background-image: url(/assets/textures/bg-fractal-noise.webp);
+    background-attachment: fixed;
+
     color: $color-neutral-navyblack;
 }
 
