@@ -141,8 +141,9 @@ const createCurvedCard = (centerProgress, text) => {
     const cardMaterial = new THREE.MeshBasicMaterial({
         map: createCardTexture(text),
         transparent: true,
-        depthTest: false,
-        depthWrite: false,
+        alphaTest: 0.01,
+        depthTest: true,
+        depthWrite: true,
         side: THREE.DoubleSide,
     });
     const card = new THREE.Mesh(cardGeometry, cardMaterial);
@@ -163,20 +164,21 @@ const createCurvedCard = (centerProgress, text) => {
 
 const motionDesignConfig = {
     camera: {
+        fieldOfView: 50.4,
         desktopDistance: 1450,
         referenceAspect: 16 / 9,
     },
     ribbon: {
-        width: 200,
-        radius: 620,
+        width: 240,
+        radius: 760,
         turns: 2.65,
-        verticalSpread: 1760,
+        verticalSpread: 2157.42,
         widthSegments: 220,
         heightSegments: 24,
     },
     card: {
-        length: 220,
-        height: 200,
+        length: 260,
+        height: 240,
         widthSegments: 50,
         heightSegments: 12,
         textureWidth: 640,
@@ -211,7 +213,7 @@ const cardScrollHalfDistance = Math.max(
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-    42,
+    motionDesignConfig.camera.fieldOfView,
     1,
     1,
     5000,
@@ -282,6 +284,7 @@ ribbonGeometry.computeVertexNormals();
 
 const ribbonMaterial = new THREE.MeshBasicMaterial({
     color: 0xe60012,
+    depthWrite: false,
     side: THREE.DoubleSide,
 });
 const ribbon = new THREE.Mesh(ribbonGeometry, ribbonMaterial);
