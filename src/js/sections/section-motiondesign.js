@@ -227,7 +227,7 @@ const createCardTexture = text => {
     return texture;
 };
 
-const createCurvedCard = (centerProgress, text) => {
+const createRibbonCard = (centerProgress, text) => {
     const { length, height, widthSegments, heightSegments } =
         motionDesignConfig.card;
     const cardGeometry = new THREE.PlaneGeometry(
@@ -236,19 +236,8 @@ const createCurvedCard = (centerProgress, text) => {
         widthSegments,
         heightSegments,
     );
-    const cardPosition = cardGeometry.attributes.position;
-    const localPositions = cardPosition.array.slice();
-
-    for (let i = 0; i < cardPosition.count; i++) {
-        const localX = cardPosition.getX(i);
-        const localY = cardPosition.getY(i);
-        const progress = centerProgress + localX / curveLength;
-        const point = getPoint(progress, localY, 8);
-
-        cardPosition.setXYZ(i, point.x, point.y, point.z);
-    }
-
-    cardGeometry.computeVertexNormals();
+    const localPositions =
+        cardGeometry.attributes.position.array.slice();
 
     const cardMaterial = new THREE.MeshBasicMaterial({
         map: createCardTexture(text),
@@ -263,14 +252,17 @@ const createCurvedCard = (centerProgress, text) => {
     card.renderOrder = 1;
     group.add(card);
 
-    cardItems.push({
+    const cardItem = {
         geometry: cardGeometry,
         mesh: card,
         localPositions,
         baseProgress: centerProgress,
         currentProgress: centerProgress,
         currentScale: 1,
-    });
+    };
+
+    cardItems.push(cardItem);
+    updateCardGeometry(cardItem);
 };
 
 // #endregion
@@ -309,8 +301,12 @@ const motionDesignConfig = {
 
 const { radius, turns, verticalSpread } = motionDesignConfig.ribbon;
 const centerProgress = 0.5;
-const startAngle = -centerProgress * Math.PI * 2 * turns;
-const curveLength = Math.hypot(Math.PI * 2 * turns * radius, verticalSpread);
+const angleSpan = Math.PI * 2 * turns;
+const startAngle = -centerProgress * angleSpan;
+const horizontalTravel = angleSpan * radius;
+const curveLength = Math.hypot(horizontalTravel, verticalSpread);
+const horizontalDirection = horizontalTravel / curveLength;
+const verticalDirection = verticalSpread / curveLength;
 const ribbonBorderOffset =
     motionDesignConfig.card.height / 2 +
     motionDesignConfig.ribbon.cardBorderGap +
@@ -362,13 +358,42 @@ const getCameraDistance = aspect => {
         : desktopDistance;
 };
 
-const getPoint = (progress, offsetY = 0, offsetZ = 0) => {
-    const angle = startAngle + progress * Math.PI * 2 * turns;
-    const x = Math.sin(angle) * (radius + offsetZ);
-    const z = Math.cos(angle) * (radius + offsetZ);
-    const y = (progress - 0.5) * verticalSpread + offsetY;
+const getRibbonFrame = (progress, offsetZ = 0) => {
+    const angle = startAngle + progress * angleSpan;
+    const sinAngle = Math.sin(angle);
+    const cosAngle = Math.cos(angle);
+    const frameRadius = radius + offsetZ;
+    const position = new THREE.Vector3(
+        sinAngle * frameRadius,
+        (progress - 0.5) * verticalSpread,
+        cosAngle * frameRadius,
+    );
+    const tangent = new THREE.Vector3(
+        cosAngle * horizontalDirection,
+        verticalDirection,
+        -sinAngle * horizontalDirection,
+    );
+    const normal = new THREE.Vector3(sinAngle, 0, cosAngle);
+    const across = new THREE.Vector3(
+        -cosAngle * verticalDirection,
+        horizontalDirection,
+        sinAngle * verticalDirection,
+    );
 
-    return { x, y, z, angle };
+    return { position, tangent, across, normal, angle };
+};
+
+const getPoint = (progress, offsetY = 0, offsetZ = 0) => {
+    const frame = getRibbonFrame(progress, offsetZ);
+
+    frame.position.addScaledVector(frame.across, offsetY);
+
+    return {
+        x: frame.position.x,
+        y: frame.position.y,
+        z: frame.position.z,
+        angle: frame.angle,
+    };
 };
 
 const getClampedValue = (value, minimum, maximum) => {
@@ -505,7 +530,7 @@ const initMotionDesign = () => {
     group.add(ribbonBorderTop, ribbonBorderBottom);
 
     CARD_DATA.forEach(({ progress, text }) => {
-        createCurvedCard(progress, text);
+        createRibbonCard(progress, text);
     });
 
     group.rotation.set(0, 0, 0);
