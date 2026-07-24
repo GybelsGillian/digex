@@ -347,11 +347,12 @@
         font-family: $font-family-notable;
         font-size: 18vh;
         text-wrap: nowrap;
-        opacity: 0.05;
+        opacity: 0.025;
         width: 100%;
         height: 100%;
         overflow: hidden;
         z-index: -1;
+        color: $color-neutral-nightnavyblack;
     }
 
     #stage {

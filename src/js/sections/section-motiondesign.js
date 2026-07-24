@@ -287,7 +287,7 @@ const motionDesignConfig = {
         borderWidth: 1,
         borderLength: 2744,
         cardBorderGap: 32,
-        borderColor: 0xe60012,
+        borderColor: 0x9c9fb9, // #9c9fb9
         radius: 760,
         turns: 2.65,
         verticalSpread: 2157.42,
